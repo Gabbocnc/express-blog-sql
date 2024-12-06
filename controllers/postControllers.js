@@ -14,8 +14,12 @@ const index = (req, res) => {
             data: results,
             counter: results.length
         }
+        console.log(responseData);
+
 
         res.status(200).json(responseData);
+
+
     })
 }
 
