@@ -64,22 +64,43 @@ const update = (req, res) => {
 
 
 const destroy = (req, res) => {
-    const slugToDelete = req.params.slug.toLowerCase();
-    console.log(slugToDelete);
 
-    const postIndex = myPost.find(post => post.slug.toLowerCase() === slugToDelete);
+    const id = req.params.id
 
-    myPost.splice(myPost.indexOf(postIndex), 1);
+    const sql = 'DELETE FROM posts WHERE id=?'
+
+    connection.query(sql, [id], (err, results) => {
+        console.log(results);
+        if (err) return res.status(500).json({ error: err })
+
+        if (results.affectedRows === 0) return res.status(404).json({ error: 'no post found with that id' })
+
+        return res.status(200).json({
+            status: 200,
+            message: 'Post deleted successfully',
+            data: results
+        });
+
+    })
 
 
-    fs.writeFileSync('./database/db.js', `module.exports = ${JSON.stringify(myPost, null, 4)}`);
 
-
-    res.json({
-        status: 200,
-        message: 'Post deleted successfully',
-        data: myPost
-    });
+    /*     const slugToDelete = req.params.slug.toLowerCase();
+        console.log(slugToDelete);
+    
+        const postIndex = myPost.find(post => post.slug.toLowerCase() === slugToDelete);
+    
+        myPost.splice(myPost.indexOf(postIndex), 1);
+    
+    
+        fs.writeFileSync('./database/db.js', `module.exports = ${JSON.stringify(myPost, null, 4)}`);
+    
+    
+        res.json({
+            status: 200,
+            message: 'Post deleted successfully',
+            data: myPost
+        }); */
 };
 
 const get = (req, res) => {

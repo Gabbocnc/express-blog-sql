@@ -8,7 +8,7 @@ const myPost = require('../database/db.js')
 router.get('/', postsController.index)
 router.post('/', postsController.store);
 router.put('/:slug', postsController.update);
-router.delete('/:slug', postsController.destroy);
+router.delete('/:id', postsController.destroy);
 router.get('/:slug', postsController.get);
 
 router.get('/', (req, res) => {
