@@ -1,5 +1,23 @@
 const myPost = require('../database/db.js')
 const fs = require('fs')
+const connection = require('../database/connection.js')
+
+const index = (req, res) => {
+
+
+    const sql = 'SELECT * FROM posts'
+
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+
+        const responseData = {
+            data: results,
+            counter: results.length
+        }
+
+        res.status(200).json(responseData);
+    })
+}
 
 const store = (req, res) => {
     const newPost = {
@@ -72,5 +90,6 @@ module.exports = {
     store,
     update,
     destroy,
-    get
+    get,
+    index
 }
