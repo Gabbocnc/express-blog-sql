@@ -67,21 +67,35 @@ const show = (req, res) => {
 
     const sql = 'SELECT * FROM posts WHERE id = ?';
 
-    connection.query(sql, [id], (err, results) => { // Passa l'id come array
+    const tagsSql = `
+        SELECT tags.*
+        FROM tags
+        JOIN post_tag ON tags.id = post_tag.tag_id
+        JOIN posts ON posts.id = post_tag.post_id
+        WHERE posts.id = ?
+    `;
+
+    connection.query(sql, [id], (err, results) => {
         if (err) return res.status(500).json({ error: err });
 
         if (results.length === 0) {
             return res.status(404).json({ error: 'No post found with that ID' });
         }
 
-        const responseData = {
-            data: results[0],
-            counter: results.length
-        };
 
-        console.log(responseData);
+        connection.query(tagsSql, [id], (err, tags) => {
+            if (err) return res.status(500).json({ error: err });
 
-        res.status(200).json(responseData);
+            const responseData = {
+                data: results[0],
+                counter: results.length,
+                tags: tags
+            };
+
+            console.log(responseData);
+
+            res.status(200).json(responseData);
+        });
     });
 };
 
