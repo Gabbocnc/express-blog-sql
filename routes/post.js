@@ -4,7 +4,7 @@ const postsController = require('../controllers/postControllers.js');
 const myPost = require('../database/db.js')
 
 
-
+router.get('/:id', postsController.show)
 router.get('/', postsController.index)
 router.post('/', postsController.store);
 router.put('/:slug', postsController.update);
